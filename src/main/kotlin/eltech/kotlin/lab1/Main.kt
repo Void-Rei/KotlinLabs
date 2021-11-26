@@ -8,7 +8,7 @@ enum class Alignment {
 }
 
 class Text(newText: MutableList<String>) {
-    var linesList = mutableListOf<String>()
+    var linesList = newText
         set(setText) {
             field = setText
             numberOfLines = setText.lastIndex
@@ -64,10 +64,8 @@ class Text(newText: MutableList<String>) {
 
 fun main() {
 
-    val text = Text(mutableListOf("This is just a test text.",
-    "Yes, kinda short.",
-        "For now."))
-
+    val text = Text(mutableListOf("   This  is  just  a  test  text.",
+    "      Yes, kinda short.", "For    now."))
 
     text.alignment = Alignment.LEFT
     val lineLength = 5
