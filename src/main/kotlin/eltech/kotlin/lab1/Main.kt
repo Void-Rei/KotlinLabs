@@ -52,6 +52,37 @@ class Text(newText: MutableList<String>) {
 
     }
 
+    private fun fullTrim(string: String): String {
+        var resultString = string
+        resultString = resultString.trim()
+        var currentChar: Char
+        var wsFlag = false
+        var splitIndexL = 1
+        var wsCount = 0
+        var i = 0
+
+        while (i < resultString.length) {
+            currentChar = resultString[i]
+            if (currentChar.isWhitespace() && !wsFlag) {
+                wsFlag = true
+                splitIndexL = i + 1
+            }
+            else if (currentChar.isWhitespace() && wsFlag) {
+                wsCount++
+            }
+            else if ((currentChar.isLetterOrDigit() || currentChar.toString().matches("\\p{Punct}".toRegex())) && wsFlag) {
+                if (wsCount != 0) {
+                    resultString = resultString.substring(0, splitIndexL) + resultString.substring(i)
+                    i -= wsCount
+                    wsCount = 0
+                }
+                wsFlag = false
+            }
+            i++
+        }
+        return resultString
+    }
+    
     fun alignText(lineLength: Int) {
         when (alignment) {
             Alignment.LEFT -> alignLeft(lineLength)
