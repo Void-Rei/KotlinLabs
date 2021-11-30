@@ -17,26 +17,39 @@ class Text(newText: MutableList<String>) {
     var alignment = Alignment.LEFT
 
     private fun alignLeft(lineLength: Int) {
-        val iterator = linesList.listIterator()
+        var i = 0
         var currentString: String
-        var extraString: String? = null
+        var extraString = ""
         var currentChar: Char?
 
-        while (iterator.hasNext())
+        while (i <= linesList.lastIndex)
         {
-            currentString = if (extraString != null) extraString + iterator.next()
-            else iterator.next()
-            currentChar = currentString.getOrNull(lineLength)
-            if ((currentChar != null) && currentChar.isWhitespace())
-                extraString = currentString.substring(lineLength + 1).trim()
+            currentString = if (extraString.isNotBlank()) extraString + " " + linesList[i]
+            else linesList[i]
+            currentString = fullTrim(currentString)
+            currentChar = currentString.getOrNull(lineLength - 1)
+            if ((currentChar != null) && currentChar.isWhitespace()) {
+                extraString = currentString.substring(lineLength)
+                currentString = currentString.dropLast(currentString.length - lineLength + 1)
+            }
             else if((currentChar != null) && (currentChar.isLetterOrDigit() || currentChar.toString().matches("\\p{Punct}".toRegex()))) {
-                for (i in lineLength downTo 1)
+                for (j in (lineLength - 1) downTo 0)
                 {
-                    if (currentChar.isWhitespace())
-                        extraString = currentString.substring(i).trim()
+                    currentChar = currentString[j]
+                    if (currentChar.isWhitespace()) {
+                        extraString = currentString.substring(j)
+                        currentString = currentString.dropLast(currentString.length - j)
+                        break
+                    }
                 }
             }
-            else extraString = null
+            else extraString = ""
+
+            linesList[i] = currentString
+            if ((i == linesList.lastIndex) && extraString.isNotBlank()) {
+                linesList.add("")
+            }
+            i++
         }
     }
 
@@ -82,7 +95,7 @@ class Text(newText: MutableList<String>) {
         }
         return resultString
     }
-    
+
     fun alignText(lineLength: Int) {
         when (alignment) {
             Alignment.LEFT -> alignLeft(lineLength)
@@ -99,7 +112,7 @@ fun main() {
     "      Yes, kinda short.", "For    now."))
 
     text.alignment = Alignment.LEFT
-    val lineLength = 5
+    val lineLength = 11
 
     text.alignText(lineLength)
 
