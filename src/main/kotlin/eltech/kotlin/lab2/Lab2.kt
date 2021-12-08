@@ -74,4 +74,9 @@ fun infixToPostfix(InFormula: String): String {
         previousSymbol = if ((symbol == '-') && opOrBracket(previousSymbol)) '_'
         else symbol
     }
+
+    while (opStack.isNotEmpty()) {
+        postFormula += opStack.removeLast()
+    }
+    return postFormula
 }
