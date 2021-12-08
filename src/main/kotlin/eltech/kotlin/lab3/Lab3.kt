@@ -54,3 +54,46 @@ class Triangle (val side_a: Double, val side_b: Double, val side_c: Double) : Sh
         return side_a + side_b + side_c
     }
 }
+
+interface ShapeFactory {
+    fun createCircle(radius: Double): Circle
+    fun createSquare(side_a: Double): Square
+    fun createRectangle(side_a: Double, side_b: Double): Rectangle
+    fun createTriangle(side_a: Double, side_b: Double, side_c: Double): Triangle
+
+    /*
+    fun createRandomCircle(): Circle
+    fun createRandomSquare(): Square
+    fun createRandomRectangle(): Rectangle
+    fun createRandomTriangle(): Triangle
+
+    fun createRandomShape(): Shape
+
+     */
+}
+
+class ShapeFactoryImpl : ShapeFactory {
+    override fun createCircle(radius: Double): Circle {
+        return Circle(radius)
+    }
+
+    override fun createSquare(side_a: Double): Square {
+        return Square(side_a)
+    }
+
+    override fun createRectangle(side_a: Double, side_b: Double): Rectangle {
+        return Rectangle(side_a, side_b)
+    }
+
+    override fun createTriangle(side_a: Double, side_b: Double, side_c: Double): Triangle {
+        return Triangle(side_a, side_b, side_c)
+    }
+
+}
+
+fun main()
+{
+    val test = ShapeFactoryImpl()
+    test.createRectangle(4.0, 5.0)
+    test.createCircle(4.0)
+}
