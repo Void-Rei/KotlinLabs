@@ -1,9 +1,13 @@
 package eltech.kotlin.lab3
 
 import kotlin.math.*
+import kotlin.random.Random
 
-fun main() {
-
+fun main()
+{
+    val test = ShapeFactoryImpl()
+    test.createRectangle(4.0, 5.0)
+    test.createCircle(4.0)
 }
 
 interface Shape {
@@ -61,15 +65,12 @@ interface ShapeFactory {
     fun createRectangle(side_a: Double, side_b: Double): Rectangle
     fun createTriangle(side_a: Double, side_b: Double, side_c: Double): Triangle
 
-    /*
     fun createRandomCircle(): Circle
     fun createRandomSquare(): Square
     fun createRandomRectangle(): Rectangle
     fun createRandomTriangle(): Triangle
 
     fun createRandomShape(): Shape
-
-     */
 }
 
 class ShapeFactoryImpl : ShapeFactory {
@@ -89,11 +90,36 @@ class ShapeFactoryImpl : ShapeFactory {
         return Triangle(side_a, side_b, side_c)
     }
 
-}
+    override fun createRandomCircle(): Circle {
+        val radius = Random.nextDouble(4.267837816154153846021603228987E160)
+        return Circle(radius)
+    }
 
-fun main()
-{
-    val test = ShapeFactoryImpl()
-    test.createRectangle(4.0, 5.0)
-    test.createCircle(4.0)
+    override fun createRandomSquare(): Square {
+        val a = Random.nextDouble(4.267837816154153846021603228987E160)
+        return Square(a)
+    }
+
+    override fun createRandomRectangle(): Rectangle {
+        val a = Random.nextDouble(4.267837816154153846021603228987E160)
+        val b = Random.nextDouble(4.267837816154153846021603228987E160)
+        return Rectangle(a,b)
+    }
+
+    override fun createRandomTriangle(): Triangle {
+        val a = Random.nextDouble(4.267837816154153846021603228987E160)
+        val b = Random.nextDouble(4.267837816154153846021603228987E160)
+        val c = Random.nextDouble(4.267837816154153846021603228987E160)
+        return Triangle(a,b,c)
+    }
+
+    override fun createRandomShape(): Shape {
+        return when (Random.nextInt(4)){
+            0 -> createRandomCircle()
+            1 -> createRandomSquare()
+            2 -> createRandomRectangle()
+            3 -> createRandomTriangle()
+            else -> createRandomCircle()
+        }
+    }
 }
