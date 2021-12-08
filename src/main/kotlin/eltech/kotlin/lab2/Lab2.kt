@@ -41,3 +41,37 @@ fun postfixCalc (InFormula: String): Int {
     }
     return numStack.removeLast() // last number -> total result
 }
+
+fun infixToPostfix(InFormula: String): String {
+    val opStack = ArrayDeque<Char>() // storage for operators
+    var postFormula = ""
+    var previousSymbol = Lbracket
+
+    for (symbol in InFormula) {
+        when {
+            symbol.isDigit() -> postFormula += symbol
+            symbol == Lbracket -> opStack.add(symbol)
+            symbol == Rbracket -> {
+                postFormula = ' ' + bracketFlush(opStack, postFormula)
+            }
+            symbol in operator -> {
+                postFormula = if ((symbol == '+') && opOrBracket(previousSymbol)) {
+                    continue
+                } else if ((symbol == '-') && opOrBracket(previousSymbol)) {
+                    opAdd('_', opStack, postFormula)
+                } else {
+                    opAdd(symbol, opStack, postFormula)
+                }
+            }
+            symbol == ' ' -> {
+                if (previousSymbol != ' ') postFormula += ' '
+            }
+            else -> throw IllegalArgumentException(
+                "Unexpected symbol found: $symbol." +
+                        "\nCannot process given formula"
+            )
+        }
+        previousSymbol = if ((symbol == '-') && opOrBracket(previousSymbol)) '_'
+        else symbol
+    }
+}
