@@ -16,7 +16,9 @@ interface Shape {
 }
 
 class Circle (val radius: Double) : Shape {
-
+    init {
+        if (radius <= 0) throw IllegalArgumentException("Incorrect circle radius $radius. It should be more than 0!")
+    }
     override fun calcArea(): Double {
         return Math.PI * radius.pow(2)
     }
@@ -26,7 +28,9 @@ class Circle (val radius: Double) : Shape {
 }
 
 class Square (val side_a: Double) : Shape {
-
+    init {
+        if (side_a <= 0) throw IllegalArgumentException("Incorrect square side $side_a. It should be more than 0!")
+    }
     override fun calcArea(): Double {
         return side_a.pow(2)
     }
@@ -37,7 +41,11 @@ class Square (val side_a: Double) : Shape {
 }
 
 class Rectangle (val side_a: Double, val side_b: Double) : Shape {
-
+    init {
+        if (side_a <= 0 && side_b < 0) throw IllegalArgumentException("Incorrect square sides $side_a and $side_b. They should be more than 0!")
+        if (side_a <= 0) throw IllegalArgumentException("Incorrect square side $side_a. It should be more than 0!")
+        if (side_b <= 0) throw IllegalArgumentException("Incorrect square side $side_b. It should be more than 0!")
+    }
     override fun calcArea(): Double {
         return side_a * side_b
     }
@@ -48,7 +56,12 @@ class Rectangle (val side_a: Double, val side_b: Double) : Shape {
 }
 
 class Triangle (val side_a: Double, val side_b: Double, val side_c: Double) : Shape {
-
+    init {
+        if (side_a <= 0) throw IllegalArgumentException("Incorrect square side $side_a. It should be more than 0!")
+        if (side_b <= 0) throw IllegalArgumentException("Incorrect square side $side_b. It should be more than 0!")
+        if (side_c <= 0) throw IllegalArgumentException("Incorrect square side $side_c. It should be more than 0!")
+        if (side_a + side_b <= side_c || side_b + side_c <= side_a || side_c + side_a <= side_b) throw IllegalArgumentException("The necessary and sufficient condition for the existence of a triangle is not fulfilled")
+    }
     override fun calcArea(): Double {
         val halfPerimeter: Double = calcPerimeter() / 2
         return sqrt(halfPerimeter * (halfPerimeter - side_a) * (halfPerimeter - side_b) * (halfPerimeter - side_c))
