@@ -4,8 +4,17 @@ fun main() {
 
 }
 
-class Matrix {
-    // ...
+class Matrix(newValues: MutableList<MutableList<Int>>) {
+    var matrix = newValues
+        set(setValues) {
+            field = setValues
+            rows = setValues.lastIndex
+            lines = setValues[0].lastIndex
+        }
+
+    private var rows = newValues.lastIndex
+    private var lines = newValues[0].lastIndex
+
     operator fun plus(other: Matrix): Matrix {
         TODO("Not yet implemented")
     }
