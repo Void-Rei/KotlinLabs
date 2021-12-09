@@ -21,10 +21,10 @@ fun main()
         test.createRandomShape(),
 
     )
-    println("Max shape perimeter: " + shapes.maxOf { it -> it.calcArea() })
-    println("Max shape area: " + shapes.maxOf { it -> it.calcPerimeter() })
-    println("Sum of shapes perimeter: " + shapes.sumOf { it -> it.calcArea() })
-    println("Sum of shapes area: " + shapes.sumOf { it -> it.calcPerimeter() })
+    println("Max shape perimeter: " + shapes.maxOf { it.calcArea() })
+    println("Max shape area: " + shapes.maxOf { it.calcPerimeter() })
+    println("Sum of shapes perimeter: " + shapes.sumOf { it.calcArea() })
+    println("Sum of shapes area: " + shapes.sumOf { it.calcPerimeter() })
 }
 
 interface Shape {
@@ -32,7 +32,7 @@ interface Shape {
     fun calcPerimeter(): Double
 }
 
-class Circle (val radius: Double) : Shape {
+class Circle (private val radius: Double) : Shape {
     init {
         if (radius <= 0) throw IllegalArgumentException("Incorrect circle radius $radius. It should be more than 0!")
     }
@@ -45,7 +45,7 @@ class Circle (val radius: Double) : Shape {
     }
 }
 
-class Square (val side_a: Double) : Shape {
+class Square (private val side_a: Double) : Shape {
     init {
         if (side_a <= 0) throw IllegalArgumentException("Incorrect square side $side_a. It should be more than 0!")
     }
@@ -58,7 +58,7 @@ class Square (val side_a: Double) : Shape {
     }
 }
 
-class Rectangle (val side_a: Double, val side_b: Double) : Shape {
+class Rectangle (private val side_a: Double, private val side_b: Double) : Shape {
     init {
         if (side_a <= 0 && side_b < 0) throw IllegalArgumentException("Incorrect square sides $side_a and $side_b. They should be more than 0!")
         if (side_a <= 0) throw IllegalArgumentException("Incorrect square side $side_a. It should be more than 0!")
@@ -73,7 +73,7 @@ class Rectangle (val side_a: Double, val side_b: Double) : Shape {
     }
 }
 
-class Triangle (val side_a: Double, val side_b: Double, val side_c: Double) : Shape {
+class Triangle (private val side_a: Double, private val side_b: Double, private val side_c: Double) : Shape {
     init {
         if (side_a <= 0) throw IllegalArgumentException("Incorrect square side $side_a. It should be more than 0!")
         if (side_b <= 0) throw IllegalArgumentException("Incorrect square side $side_b. It should be more than 0!")
