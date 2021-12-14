@@ -19,12 +19,25 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
         return Pair(lines, rows)
     }
 
-    operator fun plus(other: Matrix): Matrix {
-        TODO("Not yet implemented")
+    operator fun plusAssign(other: Matrix) {
+        if (lines != other.lines || rows != other.rows) throw IllegalArgumentException("Matrices must be of the same dimension!")
+        val ans = MutableList(rows + 1) { MutableList<Double>(lines + 1) { 0.0 } }
+        for (i in 0..lines) {
+            for (j in 0..rows) {
+                matrix[i][j] += other.matrix[i][j]
+            }
+        }
     }
 
-    operator fun plusAssign(other: Matrix) {
-        TODO("Not yet implemented")
+    operator fun plus(other: Matrix): Matrix {
+        if (lines != other.lines || rows != other.rows) throw IllegalArgumentException ("Matrices must be of the same dimension!")
+        val ans = MutableList(rows + 1) { MutableList<Double>(lines + 1) { 0.0 } }
+        for (i in 0 .. lines) {
+            for (j in 0 .. rows) {
+                ans[i][j] = matrix[i][j] + other.matrix[i][j]
+            }
+        }
+        return Matrix(ans)
     }
 
     operator fun times(scalar: Double) {
