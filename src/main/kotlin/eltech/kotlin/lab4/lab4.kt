@@ -1,11 +1,7 @@
 package eltech.kotlin.lab4
 
-fun main() {
-    
-}
-
 class Matrix(newValues: MutableList<MutableList<Double>>) {
-    var matrix = newValues
+    private var matrix = newValues
         set(setValues) {
             field = setValues
             lines = setValues.lastIndex
@@ -30,13 +26,13 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
 
     operator fun plus(other: Matrix): Matrix {
         if (lines != other.lines || rows != other.rows) throw IllegalArgumentException ("Matrices must be of the same dimension!")
-        val ans = MutableList(lines + 1) { MutableList<Double>(rows + 1) { 0.0 } }
+        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
         for (i in 0 .. lines) {
             for (j in 0 .. rows) {
-                ans[i][j] = matrix[i][j] + other.matrix[i][j]
+                answer[i][j] = matrix[i][j] + other.matrix[i][j]
             }
         }
-        return Matrix(ans)
+        return Matrix(answer)
     }
 
     operator fun minusAssign(other: Matrix) {
@@ -50,23 +46,23 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
 
     operator fun minus(other: Matrix): Matrix {
         if (lines != other.lines || rows != other.rows) throw IllegalArgumentException ("Matrices must be of the same dimension!")
-        val ans = MutableList(lines + 1) { MutableList<Double>(rows + 1) { 0.0 } }
+        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
         for (i in 0 .. lines) {
             for (j in 0 .. rows) {
-                ans[i][j] = matrix[i][j] - other.matrix[i][j]
+                answer[i][j] = matrix[i][j] - other.matrix[i][j]
             }
         }
-        return Matrix(ans)
+        return Matrix(answer)
     }
 
     operator fun times(scalar: Double): Matrix {
-        val ans = MutableList(lines + 1) { MutableList<Double>(rows + 1) { 0.0 } }
+        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
         for (i in 0 .. lines) {
             for (j in 0 .. rows) {
-                ans[i][j] = matrix[i][j] * scalar
+                answer[i][j] = matrix[i][j] * scalar
             }
         }
-        return Matrix(ans)
+        return Matrix(answer)
     }
 
     operator fun timesAssign(scalar: Double) {
@@ -78,13 +74,13 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
     }
 
     operator fun div(scalar: Double): Matrix {
-        val ans = MutableList(lines + 1) { MutableList<Double>(rows + 1) { 0.0 } }
+        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
         for (i in 0 .. lines) {
             for (j in 0 .. rows) {
-                ans[i][j] = matrix[i][j] / scalar
+                answer[i][j] = matrix[i][j] / scalar
             }
         }
-        return Matrix(ans)
+        return Matrix(answer)
     }
 
     operator fun divAssign(scalar: Double) {
@@ -109,17 +105,18 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
     }
 
     operator fun get(line: Int, row: Int): Double {
+        wrongIndexCheck(line, row)
         return matrix[line][row]
     }
 
     operator fun unaryMinus(): Matrix {
-        val ans = MutableList(lines + 1) { MutableList<Double>(rows + 1) { 0.0 } }
+        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
         for (i in 0 .. lines) {
             for (j in 0 .. rows) {
-                ans[i][j] = -matrix[i][j]
+                answer[i][j] = -matrix[i][j]
             }
         }
-        return Matrix(ans)
+        return Matrix(answer)
     }
 
     operator fun unaryPlus(): Matrix {
@@ -136,5 +133,32 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
             resultString += System.lineSeparator()
          }
         return resultString
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Matrix
+
+        if (matrix != other.matrix) return false
+        if (lines != other.lines) return false
+        if (rows != other.rows) return false
+
+        for (line in 0..lines) {
+            for (row in 0..rows)
+            {
+                if (matrix[line][row] != other.matrix[line][row]) return false
+            }
+        }
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = matrix.hashCode()
+        result = 31 * result + lines
+        result = 31 * result + rows
+        return result
     }
 }
