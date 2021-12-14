@@ -65,6 +65,32 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
         return Matrix(answer)
     }
 
+    operator fun times(other: Matrix): Matrix {
+        if (rows != other.lines) throw IllegalArgumentException("The number of rows of the first matrix must be equal to the number of columns of the second matrix!")
+        val answer = MutableList(lines + 1) { MutableList<Double>(other.rows + 1) { 0.0 } }
+        for (i in 0 .. lines) {
+            for (j in 0 .. other.rows) {
+                for (k in 0 .. rows) {
+                    answer[i][j] += matrix[i][k] * other.matrix[k][j]
+                }
+            }
+        }
+        return Matrix(answer)
+    }
+
+    operator fun timesAssign(other: Matrix) {
+        if (rows != other.lines) throw IllegalArgumentException("The number of rows of the first matrix must be equal to the number of columns of the second matrix!")
+        val answer = MutableList(lines + 1) { MutableList<Double>(other.rows + 1) { 0.0 } }
+        for (i in 0 .. lines) {
+            for (j in 0 .. other.rows) {
+                for (k in 0 .. rows) {
+                    answer[i][j] += matrix[i][k] * other.matrix[k][j]
+                }
+            }
+        }
+        matrix = answer
+    }
+
     operator fun timesAssign(scalar: Double) {
         for (i in 0 .. lines) {
             for (j in 0 .. rows) {
