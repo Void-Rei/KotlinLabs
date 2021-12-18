@@ -10,7 +10,7 @@ fun main() {
         )
     )
 
-    val lineLength = 11
+    val lineLength = 1
 
     text.alignLeft(lineLength)
 

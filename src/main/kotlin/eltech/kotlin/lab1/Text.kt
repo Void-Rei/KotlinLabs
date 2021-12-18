@@ -33,6 +33,16 @@ class Text(newText: MutableList<String>) {
                         currentString = currentString.dropLast(currentString.length - j)
                         break
                     }
+                    else if (j == 0) {                     // case when line length is less than first word in line
+                        val k = findWordEnd(currentString) // finding the end of first word
+                        if (k != currentString.lastIndex) {
+                            extraString = currentString.substring(k) // cropping by the end of this word
+                            currentString = currentString.dropLast(currentString.length - k)
+                            break
+                        }
+                        extraString = ""
+                        break
+                    }
                 }
             }
             else extraString = ""
@@ -43,6 +53,17 @@ class Text(newText: MutableList<String>) {
             }
             i++
         }
+    }
+
+    private fun findWordEnd (currentString: String): Int {
+        var currentChar: Char
+        for (i in 0..currentString.lastIndex) {
+            currentChar = currentString[i]
+            if (currentChar.isWhitespace()) {
+                return i
+            }
+        }
+        return currentString.lastIndex
     }
 
     private fun fullTrim(string: String): String {
