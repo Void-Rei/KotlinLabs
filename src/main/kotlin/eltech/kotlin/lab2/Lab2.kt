@@ -11,19 +11,15 @@ val operator = arrayOf('+', '-', '*', '/', '^', '_')
 const val Lbracket = '('
 const val Rbracket = ')'
 
-fun main() {
-    println(postfixCalc(readLine()!!))
-}
-
-fun postfixCalc (InFormula: String): Int {
-    val postFormula = infixToPostfix(InFormula)
+fun postfixCalc(inFormula: String): Int {
+    val postFormula = infixToPostfix(inFormula)
     val numStack = ArrayDeque<Int>() // operands/results of calculations stored here
     var currentNumber = "" // we collect numbers by their digits in string then convert to Int
 
     for (symbol in postFormula) {
         when {
             symbol.isDigit() -> currentNumber += symbol // collect digit to number
-            (symbol in operator) ->{
+            (symbol in operator) -> {
                 if (currentNumber != "") {
                     numStack.add(currentNumber.toInt()) // digits in a row stopped -> new number ready
                     currentNumber = ""
@@ -36,14 +32,16 @@ fun postfixCalc (InFormula: String): Int {
                     currentNumber = ""
                 }
             }
-            else -> throw IllegalArgumentException("Unexpected symbol found: $symbol." +
-                    "\nCannot process given formula")
+            else -> throw IllegalArgumentException(
+                "Unexpected symbol found: $symbol." +
+                        "\nCannot process given formula"
+            )
         }
     }
     return numStack.removeLast() // last number -> total result
 }
 
-fun doMath(numStack: ArrayDeque<Int>, op: Char) {
+private fun doMath(numStack: ArrayDeque<Int>, op: Char) {
 
     when (op) {
         operator[0] -> numStack.add(numStack.removeLast() + numStack.removeLast())
@@ -60,17 +58,19 @@ fun doMath(numStack: ArrayDeque<Int>, op: Char) {
             numStack.add(base.pow(power).toInt())
         }
         operator[5] -> numStack.add(0 - numStack.removeLast())
-        else -> throw IllegalArgumentException("Unexpected symbol found: $op." +
-                "\nCannot process given formula")
+        else -> throw IllegalArgumentException(
+            "Unexpected symbol found: $op." +
+                    "\nCannot process given formula"
+        )
     }
 }
 
-fun infixToPostfix(InFormula: String): String {
+private fun infixToPostfix(inFormula: String): String {
     val opStack = ArrayDeque<Char>() // storage for operators
     var postFormula = ""
     var previousSymbol = Lbracket
 
-    for (symbol in InFormula) {
+    for (symbol in inFormula) {
         when {
             symbol.isDigit() -> postFormula += symbol
             symbol == Lbracket -> opStack.add(symbol)
@@ -80,9 +80,11 @@ fun infixToPostfix(InFormula: String): String {
             symbol in operator -> {
                 postFormula = if ((symbol == '+') && opOrBracket(previousSymbol)) {
                     continue
-                } else if ((symbol == '-') && opOrBracket(previousSymbol)) {
+                }
+                else if ((symbol == '-') && opOrBracket(previousSymbol)) {
                     opAdd('_', opStack, postFormula)
-                } else {
+                }
+                else {
                     opAdd(symbol, opStack, postFormula)
                 }
             }
@@ -104,11 +106,11 @@ fun infixToPostfix(InFormula: String): String {
     return postFormula
 }
 
-fun opOrBracket (symbol: Char): Boolean {
+private fun opOrBracket(symbol: Char): Boolean {
     return ((symbol in operator) || (symbol == Lbracket))
 }
 
-fun opAdd (currentChar: Char, opStack: ArrayDeque<Char>, postFormula: String): String {
+private fun opAdd(currentChar: Char, opStack: ArrayDeque<Char>, postFormula: String): String {
     val minPriority = operator.indexOf(currentChar)
     var resultFormula = postFormula + ' ' // add space to separate from previous symbol
 
@@ -119,7 +121,7 @@ fun opAdd (currentChar: Char, opStack: ArrayDeque<Char>, postFormula: String): S
     return resultFormula
 }
 
-fun bracketFlush(opStack: ArrayDeque<Char>, postFormula: String): String {
+private fun bracketFlush(opStack: ArrayDeque<Char>, postFormula: String): String {
     var tempChar = opStack.removeLast()
     var resultFormula = postFormula
 
