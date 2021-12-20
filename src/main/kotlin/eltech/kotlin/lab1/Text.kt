@@ -50,17 +50,6 @@ class Text(newText: MutableList<String>) {
         }
     }
 
-    private fun findWordEnd (currentString: String): Int {
-        var currentChar: Char
-        for (i in 0..currentString.lastIndex) {
-            currentChar = currentString[i]
-            if (currentChar.isWhitespace()) {
-                return i
-            }
-        }
-        return currentString.lastIndex
-    }
-
     private fun fullTrim(string: String): String {
         var resultString = string
         resultString = resultString.trim()
