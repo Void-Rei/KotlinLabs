@@ -34,13 +34,8 @@ class Text(newText: MutableList<String>) {
                         break
                     }
                     else if (j == 0) {                     // case when line length is less than first word in line
-                        val k = findWordEnd(currentString) // finding the end of first word
-                        if (k != currentString.lastIndex) {
-                            extraString = currentString.substring(k) // cropping by the end of this word
-                            currentString = currentString.dropLast(currentString.length - k)
-                            break
-                        }
-                        extraString = ""
+                        extraString = currentString.substring(lineLength) // cropping by the end of this word
+                        currentString = currentString.dropLast(currentString.length - lineLength)
                         break
                     }
                 }
