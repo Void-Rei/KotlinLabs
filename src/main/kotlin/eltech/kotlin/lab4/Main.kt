@@ -30,10 +30,10 @@ fun main() {
     matrix1 -= matrix2           // subtracting two matrices, with changing the matrix on the left
     println(matrix1.toString())  // make sure that the matrix on the left has changed
 
-    var sizes = matrix1.getSizes()                                   // get sizes of matrix as Pair<Int lines, Int rows>
-    println("Sizes of matrix1 are: ${sizes.first}, ${sizes.second}") // see the sizes
-    sizes = matrix2.getSizes()                                       // get sizes of matrix as Pair<Int lines, Int rows>
-    println("Sizes of matrix2 are: ${sizes.first}, ${sizes.second}") // see the sizes
+    //var sizes = matrix1.getSizes()                                   // get sizes of matrix as Pair<Int lines, Int rows>
+    //println("Sizes of matrix1 are: ${sizes.first}, ${sizes.second}") // see the sizes
+    //sizes = matrix2.getSizes()                                       // get sizes of matrix as Pair<Int lines, Int rows>
+    //println("Sizes of matrix2 are: ${sizes.first}, ${sizes.second}") // see the sizes
 
     println("Matrix1 and matrix2 are equal: ${matrix1 == matrix2}")                              // checking matrices for equality
     val matrix3 = Matrix (mutableListOf(mutableListOf(1.0,2.0,3.0), mutableListOf(4.0,5.0,6.0))) // creating third matrix

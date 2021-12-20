@@ -1,34 +1,45 @@
 package eltech.kotlin.lab4
 
-class Matrix(newValues: MutableList<MutableList<Double>>) {
-    private var matrix = newValues
-        set(setValues) {
-            field = setValues
-            lines = setValues.lastIndex
-            rows = setValues[0].lastIndex
+class Matrix(newValues: List<List<Double>>) {
+    private var matrix: MutableList<MutableList<Double>>
+
+    init {
+        if (!sizeCheck(newValues)) throw IllegalArgumentException("Matrix rows must be of the same size!")
+
+        matrix = MutableList(newValues.size) { MutableList(newValues[0].size) { 0.0 } }
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
+                matrix[i][j] = newValues[i][j]
+            }
         }
 
-    private var lines = newValues.lastIndex
-    private var rows = newValues[0].lastIndex
-
-    fun getSizes(): Pair<Int, Int> {
-        return Pair(lines, rows)
     }
+
+    private fun sizeCheck(newList: List<List<Double>>): Boolean {
+        val expectedSize = newList.lastIndex
+        for (i in 1..newList.lastIndex) {
+            if (newList[i].lastIndex != expectedSize) return false
+        }
+        return true
+    }
+
+    val lines get() = matrix.size
+    val rows get() = matrix[0].size
 
     operator fun plusAssign(other: Matrix) {
         if (lines != other.lines || rows != other.rows) throw IllegalArgumentException("Matrices must be of the same dimension!")
-        for (i in 0..lines) {
-            for (j in 0..rows) {
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 matrix[i][j] += other.matrix[i][j]
             }
         }
     }
 
     operator fun plus(other: Matrix): Matrix {
-        if (lines != other.lines || rows != other.rows) throw IllegalArgumentException ("Matrices must be of the same dimension!")
-        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
-        for (i in 0 .. lines) {
-            for (j in 0 .. rows) {
+        if (lines != other.lines || rows != other.rows) throw IllegalArgumentException("Matrices must be of the same dimension!")
+        val answer = MutableList(lines) { MutableList(rows) { 0.0 } }
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 answer[i][j] = matrix[i][j] + other.matrix[i][j]
             }
         }
@@ -37,18 +48,18 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
 
     operator fun minusAssign(other: Matrix) {
         if (lines != other.lines || rows != other.rows) throw IllegalArgumentException("Matrices must be of the same dimension!")
-        for (i in 0..lines) {
-            for (j in 0..rows) {
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 matrix[i][j] -= other.matrix[i][j]
             }
         }
     }
 
     operator fun minus(other: Matrix): Matrix {
-        if (lines != other.lines || rows != other.rows) throw IllegalArgumentException ("Matrices must be of the same dimension!")
-        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
-        for (i in 0 .. lines) {
-            for (j in 0 .. rows) {
+        if (lines != other.lines || rows != other.rows) throw IllegalArgumentException("Matrices must be of the same dimension!")
+        val answer = MutableList(lines) { MutableList(rows) { 0.0 } }
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 answer[i][j] = matrix[i][j] - other.matrix[i][j]
             }
         }
@@ -56,9 +67,9 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
     }
 
     operator fun times(scalar: Double): Matrix {
-        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
-        for (i in 0 .. lines) {
-            for (j in 0 .. rows) {
+        val answer = MutableList(lines) { MutableList(rows) { 0.0 } }
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 answer[i][j] = matrix[i][j] * scalar
             }
         }
@@ -67,10 +78,10 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
 
     operator fun times(other: Matrix): Matrix {
         if (rows != other.lines) throw IllegalArgumentException("The number of rows of the first matrix must be equal to the number of columns of the second matrix!")
-        val answer = MutableList(lines + 1) { MutableList<Double>(other.rows + 1) { 0.0 } }
-        for (i in 0 .. lines) {
-            for (j in 0 .. other.rows) {
-                for (k in 0 .. rows) {
+        val answer = MutableList(lines) { MutableList<Double>(other.rows) { 0.0 } }
+        for (i in 0 until lines) {
+            for (j in 0..other.rows) {
+                for (k in 0 until rows) {
                     answer[i][j] += matrix[i][k] * other.matrix[k][j]
                 }
             }
@@ -80,10 +91,10 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
 
     operator fun timesAssign(other: Matrix) {
         if (rows != other.lines) throw IllegalArgumentException("The number of rows of the first matrix must be equal to the number of columns of the second matrix!")
-        val answer = MutableList(lines + 1) { MutableList<Double>(other.rows + 1) { 0.0 } }
-        for (i in 0 .. lines) {
-            for (j in 0 .. other.rows) {
-                for (k in 0 .. rows) {
+        val answer = MutableList(lines) { MutableList<Double>(other.rows) { 0.0 } }
+        for (i in 0 until lines) {
+            for (j in 0..other.rows) {
+                for (k in 0 until rows) {
                     answer[i][j] += matrix[i][k] * other.matrix[k][j]
                 }
             }
@@ -92,17 +103,17 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
     }
 
     operator fun timesAssign(scalar: Double) {
-        for (i in 0 .. lines) {
-            for (j in 0 .. rows) {
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 matrix[i][j] *= scalar
             }
         }
     }
 
     operator fun div(scalar: Double): Matrix {
-        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
-        for (i in 0 .. lines) {
-            for (j in 0 .. rows) {
+        val answer = MutableList(lines) { MutableList(rows) { 0.0 } }
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 answer[i][j] = matrix[i][j] / scalar
             }
         }
@@ -110,19 +121,18 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
     }
 
     operator fun divAssign(scalar: Double) {
-        for (i in 0 .. lines) {
-            for (j in 0 .. rows) {
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 matrix[i][j] /= scalar
             }
         }
     }
 
-    private fun wrongIndexCheck(i: Int, j: Int)
-    {
-        if (j > rows) throw IndexOutOfBoundsException ("Index j should be less than rows amount!")
-        if (i > lines) throw IndexOutOfBoundsException ("Index i should be less than lines amount!")
-        if (j < 0) throw IndexOutOfBoundsException ("Index j should be more than 0!")
-        if (i < 0) throw IndexOutOfBoundsException ("Index i should be more than 0!")
+    private fun wrongIndexCheck(i: Int, j: Int) {
+        if (j > rows) throw IndexOutOfBoundsException("Index j should be less than rows amount!")
+        if (i > lines) throw IndexOutOfBoundsException("Index i should be less than lines amount!")
+        if (j < 0) throw IndexOutOfBoundsException("Index j should be more than 0!")
+        if (i < 0) throw IndexOutOfBoundsException("Index i should be more than 0!")
     }
 
     operator fun set(line: Int, row: Int, value: Double) {
@@ -136,9 +146,9 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
     }
 
     operator fun unaryMinus(): Matrix {
-        val answer = MutableList(lines + 1) { MutableList(rows + 1) { 0.0 } }
-        for (i in 0 .. lines) {
-            for (j in 0 .. rows) {
+        val answer = MutableList(lines) { MutableList(rows) { 0.0 } }
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 answer[i][j] = -matrix[i][j]
             }
         }
@@ -152,12 +162,12 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
     override fun toString(): String {
         var resultString = ""
 
-        for (i in 0..lines) {
-            for (j in 0..rows) {
+        for (i in 0 until lines) {
+            for (j in 0 until rows) {
                 resultString += matrix[i][j].toString() + ' '
             }
             resultString += System.lineSeparator()
-         }
+        }
         return resultString
     }
 
@@ -171,9 +181,8 @@ class Matrix(newValues: MutableList<MutableList<Double>>) {
         if (lines != other.lines) return false
         if (rows != other.rows) return false
 
-        for (line in 0..lines) {
-            for (row in 0..rows)
-            {
+        for (line in 0 until lines) {
+            for (row in 0 until rows) {
                 if (matrix[line][row] != other.matrix[line][row]) return false
             }
         }
