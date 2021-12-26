@@ -1,11 +1,39 @@
 package eltech.kotlin.lab5
 
-class Book /* implementation */
-class Author /* implementation */
-class User /* implementation */
+import java.time.Year
+import kotlin.random.Random
+
+class Book (
+    val title: String,
+    val author: Author,
+    val genre: Genre,
+    val year: Year,
+        ) {
+    override fun toString(): String {
+        return " Title: $title\nAuthor: $author\nGenre: $genre\nYear:$year)"
+    }
+}
+class Author(
+    val firstName: String,
+    val surname: String,
+    val id: Int = Random.nextInt()
+        ) {
+    override fun toString(): String {
+        return "Author: $firstName $surname | $id)"
+    }
+}
+class User (
+    val firstName: String,
+    val surname: String,
+    val id: Int = Random.nextInt()
+        ) {
+    override fun toString(): String {
+        return "User: $firstName $surname | $id)"
+    }
+}
 
 enum class Genre {
-    /*implementation*/
+
 }
 
 sealed class Status {
