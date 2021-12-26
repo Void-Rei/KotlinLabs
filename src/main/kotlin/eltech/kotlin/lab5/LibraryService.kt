@@ -67,7 +67,7 @@ interface LibraryInterface {
 
     fun addBook(book: Book, status: Status = Status.Available)
 
-    fun registerUser(/* parameters */)
+    fun registerUser(user: User)
     fun unregisterUser(user: User)
 
     fun takeBook(user: User, book: Book)
@@ -124,19 +124,41 @@ class LibraryService : LibraryInterface {
         books.add(book)
     }
 
-    override fun registerUser(/* parameters */) {
-
+    override fun registerUser(user: User){
+        users.add(user)
     }
 
     override fun unregisterUser(user: User) {
-
+        if (!users.contains(user))
+            throw IllegalArgumentException("User doesn't exist!")
+        for (i in 0..books.size) {
+            if (books[i].status == Status.UsedBy(user)) {
+                books[i].status = Status.Available
+            }
+        }
+        users.remove(user)
     }
 
-    override fun takeBook(user: User, book: Book) {
-
+    override fun takeBook(user: User, book: Book){
+        if (!users.contains(user))
+            throw IllegalArgumentException("User doesn't exist!")
+        if (!books.contains(book))
+            throw IllegalArgumentException("Book doesn't exist!")
+        if (books.filter { it.status == Status.UsedBy(user) }.size < 3) {
+            book.status = Status.UsedBy(user)
+            return
+        }
+        throw IllegalArgumentException("User cannot store more than 3 books!")
     }
 
     override fun returnBook(book: Book) {
-
+        if (!books.contains(book))
+            throw IllegalArgumentException("Book doesn't exist!")
+        for (i in 0..books.size) {
+            if (books[i] == book) {
+                books[i].status = Status.Available
+                return
+            }
+        }
     }
 }
