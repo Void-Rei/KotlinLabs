@@ -1,37 +1,33 @@
 package eltech.kotlin.lab5
 
 import java.time.Year
-import kotlin.random.Random
 
-class Book(
+data class Book(
     val title: String,
     val author: Author,
     val genre: Genre,
     val year: Year,
-    var status: Status
 ) {
     override fun toString(): String {
-        return "Title: $title\nAuthor: $author\nGenre: $genre\nYear:$year)"
+        return "Title: $title\nAuthor: $author\nGenre: $genre\nYear:$year"
     }
 }
 
-class Author(
+data class Author(
     val firstName: String,
     val surname: String,
-    val id: Int = Random.nextInt()
 ) {
     override fun toString(): String {
-        return "Author: $firstName $surname | $id)"
+        return "Author: $firstName $surname"
     }
 }
 
-class User(
+data class User(
     val firstName: String,
     val surname: String,
-    val id: Int = Random.nextInt()
 ) {
     override fun toString(): String {
-        return "User: $firstName $surname | $id)"
+        return "User: $firstName $surname"
     }
 }
 
@@ -45,10 +41,29 @@ enum class Genre {
 }
 
 sealed class Status {
-    object Available : Status()
-    data class UsedBy(val user: User) : Status()
-    object ComingSoon : Status()
-    object Restoration : Status()
+    object Available : Status() {
+        override fun toString(): String {
+            return "Available"
+        }
+    }
+
+    data class UsedBy(val user: User) : Status() {
+        override fun toString(): String {
+            return "Used by $user"
+        }
+    }
+
+    object ComingSoon : Status() {
+        override fun toString(): String {
+            return "Coming Soon"
+        }
+    }
+
+    object Restoration : Status() {
+        override fun toString(): String {
+            return "On Restoration"
+        }
+    }
 }
 
 interface LibraryInterface {
@@ -75,53 +90,48 @@ interface LibraryInterface {
 }
 
 class LibraryService : LibraryInterface {
-    private val books: MutableList<Book> = mutableListOf()
+    private val books: MutableMap<Book, Status> = mutableMapOf()
     private val users: MutableList<User> = mutableListOf()
 
     override fun findBooks(title: String): List<Book> {
-        return books.filter { it.title == title }
+        return books.filter { it.key.title == title }.keys.toList()
     }
 
     override fun findBooks(author: Author): List<Book> {
-        return books.filter { it.author == author }
+        return books.filter { it.key.author == author }.keys.toList()
     }
 
     override fun findBooks(year: Year): List<Book> {
-        return books.filter { it.year == year }
+        return books.filter { it.key.year == year }.keys.toList()
     }
 
     override fun findBooks(genre: Genre): List<Book> {
-        return books.filter { it.genre == genre }
+        return books.filter { it.key.genre == genre }.keys.toList()
     }
 
     override fun getAllBooks(): List<Book> {
-        return books
+        return books.keys.toList()
     }
 
     override fun getAllAvailableBooks(): List<Book> {
-        return books.filter { it.status == Status.Available }
+        return books.filter { it.value == Status.Available }.keys.toList()
     }
 
     override fun getBookStatus(book: Book): Status {
-        return book.status
+        val status = books[book]
+        return if (status != null) status else throw NullPointerException("Expression 'books[book]' must not be null")
     }
 
     override fun getAllBookStatuses(): Map<Book, Status> {
-        val map: MutableMap<Book, Status> = mutableMapOf()
-
-        for (book in books) {
-            map[book] = book.status
-        }
-        return map
+        return books
     }
 
     override fun setBookStatus(book: Book, status: Status) {
-        book.status = status
+        books[book] = status
     }
 
     override fun addBook(book: Book, status: Status) {
-        book.status = status
-        books.add(book)
+        books[book] = status
     }
 
     override fun registerUser(user: User){
@@ -131,9 +141,10 @@ class LibraryService : LibraryInterface {
     override fun unregisterUser(user: User) {
         if (!users.contains(user))
             throw IllegalArgumentException("User doesn't exist!")
-        for (i in 0..books.size) {
-            if (books[i].status == Status.UsedBy(user)) {
-                books[i].status = Status.Available
+
+        for (book in books.keys) {
+            if (books[book] == Status.UsedBy(user)) {
+                books[book] = Status.Available
             }
         }
         users.remove(user)
@@ -142,21 +153,21 @@ class LibraryService : LibraryInterface {
     override fun takeBook(user: User, book: Book){
         if (!users.contains(user))
             throw IllegalArgumentException("User doesn't exist!")
-        if (!books.contains(book))
+        if (!books.containsKey(book))
             throw IllegalArgumentException("Book doesn't exist!")
-        if (books.filter { it.status == Status.UsedBy(user) }.size < 3) {
-            book.status = Status.UsedBy(user)
+        if (books.filter { it.value == Status.UsedBy(user) }.size < 3) {
+            books[book] = Status.UsedBy(user)
             return
         }
         throw IllegalArgumentException("User cannot store more than 3 books!")
     }
 
-    override fun returnBook(book: Book) {
-        if (!books.contains(book))
+    override fun returnBook(returnedBook: Book) {
+        if (!books.containsKey(returnedBook))
             throw IllegalArgumentException("Book doesn't exist!")
-        for (i in 0..books.size) {
-            if (books[i] == book) {
-                books[i].status = Status.Available
+        for (book in books.keys) {
+            if (book == returnedBook) {
+                books[book] = Status.Available
                 return
             }
         }
