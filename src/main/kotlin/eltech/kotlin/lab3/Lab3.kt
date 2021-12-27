@@ -116,7 +116,7 @@ class ShapeFactoryImpl : ShapeFactory {
     override fun createRandomTriangle(): Triangle {
         val a = Random.nextDouble(0.1 ,1000.0)
         val b = Random.nextDouble(0.1 ,1000.0)
-        val c = Random.nextDouble(0.1 ,a+b)
+        val c = Random.nextDouble(0.1 ,a+b+1)
         return Triangle(a,b,c)
     }
 
