@@ -21,6 +21,10 @@ class Circle(val radius: Double) : Shape {
     override fun calcPerimeter(): Double {
         return Math.PI * radius * 2
     }
+
+    override fun toString (): String {
+        return "Circle: r = $radius"
+    }
 }
 
 class Square(val sideA: Double) : Shape {
@@ -34,6 +38,10 @@ class Square(val sideA: Double) : Shape {
 
     override fun calcPerimeter(): Double {
         return 4 * sideA
+    }
+
+    override fun toString (): String {
+        return "Square: side = $sideA"
     }
 }
 
@@ -50,6 +58,10 @@ class Rectangle(val sideA: Double, val sideB: Double) : Shape {
 
     override fun calcPerimeter(): Double {
         return (sideA + sideB) * 2
+    }
+
+    override fun toString (): String {
+        return "Rectangle: side A = $sideA, side B = $sideB"
     }
 }
 
@@ -69,6 +81,10 @@ class Triangle(val sideA: Double, val sideB: Double, val sideC: Double) : Shape 
 
     override fun calcPerimeter(): Double {
         return sideA + sideB + sideC
+    }
+
+    override fun toString (): String {
+        return "Triangle: side A = $sideA, side B = $sideB, side C = $sideC"
     }
 }
 
