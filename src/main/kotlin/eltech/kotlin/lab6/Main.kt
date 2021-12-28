@@ -1,12 +1,11 @@
 package eltech.kotlin.lab6
 
-import eltech.kotlin.lab3.Shape
-import eltech.kotlin.lab3.ShapeFactoryImpl
+import eltech.kotlin.lab3.*
 
 fun main() {
     val shapeCollector = ShapeCollector<Shape>()
-    val circleCollector = ShapeCollector<Shape>()
-    val test = ShapeFactoryImpl()
+    val circleCollector = ShapeCollector<Circle>()
+    val test: ShapeFactory = ShapeFactoryImpl()
 
     shapeCollector.add(test.createRandomTriangle())
     shapeCollector.add(test.createRandomRectangle())
