@@ -75,7 +75,7 @@ fun main() {
     }
     println(System.lineSeparator())
 
-    allCircles = shapeCollector.getAllSorted(ShapeComparators.AscendingPerimeterComparator)
+    allCircles = circleCollector.getAllSorted(ShapeComparators.AscendingPerimeterComparator)
     println("Ascending")
     for (shape in allCircles) {
         println(shape.calcPerimeter())
@@ -83,7 +83,7 @@ fun main() {
     }
     println(System.lineSeparator())
 
-    allCircles = shapeCollector.getAllSorted(ShapeComparators.DescendingSurfaceComparator)
+    allCircles = circleCollector.getAllSorted(ShapeComparators.DescendingSurfaceComparator)
     println("Descending")
     for (shape in allCircles) {
         println(shape.calcArea())
