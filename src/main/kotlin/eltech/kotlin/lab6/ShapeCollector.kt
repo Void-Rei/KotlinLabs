@@ -19,78 +19,66 @@ class ShapeCollector<T : Shape> {
         return allShapes
     }
 
-    fun getAllSorted(comparator: ShapeComparators): List<T> {
+    fun getAllSorted(comparator: Comparator<in T>): List<T> {
         val sortedShapes = mutableListOf<T>()
         sortedShapes.addAll(0,allShapes)
 
-        var previous: T
-        var current: T
-        var sorted = false
-
-        while (!sorted) {
-            sorted = true
-            for (i in 1 until sortedShapes.size) {
-                previous = sortedShapes[i - 1]
-                current = sortedShapes[i]
-                if (comparator.compare(previous, current) == 0) {
-                    sortedShapes[i] = previous
-                    sortedShapes[i - 1] = current
-                    sorted = false
-                }
-            }
-        }
-        return sortedShapes
+        return sortedShapes.sortedWith(comparator)
     }
 }
 
 sealed class ShapeComparators : Comparator<Shape> {
     object DescendingPerimeterComparator : ShapeComparators() {
         override fun compare(a: Shape, b: Shape): Int {
-            return if (a.calcPerimeter() >= b.calcPerimeter()) 1
-            else 0
+            return if (a.calcPerimeter() < b.calcPerimeter()) 1
+            else if (a.calcPerimeter() == b.calcPerimeter()) 0
+            else -1
         }
     }
 
     object AscendingPerimeterComparator : ShapeComparators() {
         override fun compare(a: Shape, b: Shape): Int {
-            return if (a.calcPerimeter() <= b.calcPerimeter()) 1
-            else 0
+            return if (a.calcPerimeter() > b.calcPerimeter()) 1
+            else if (a.calcPerimeter() == b.calcPerimeter()) 0
+            else -1
 
         }
     }
 
     object DescendingSurfaceComparator : ShapeComparators() {
         override fun compare(a: Shape, b: Shape): Int {
-            return if (a.calcArea() >= b.calcArea()) 1
-            else 0
+            return if (a.calcArea() < b.calcArea()) 1
+            else if (a.calcArea() == b.calcArea()) 0
+            else -1
         }
     }
 
     object AscendingSurfaceComparator : ShapeComparators() {
         override fun compare(a: Shape, b: Shape): Int {
-            return if (a.calcArea() <= b.calcArea()) 1
-            else 0
+            return if (a.calcArea() > b.calcArea()) 1
+            else if (a.calcArea() == b.calcArea()) 0
+            else -1
         }
     }
 
     object DescendingRadiusComparator : ShapeComparators() {
         override fun compare(a: Shape, b: Shape): Int {
-            if ((a !is Circle) || (b !is Circle)) throw IllegalArgumentException(
-                "This comparator is only for circles," +
-                        "yet a non-circle received"
-            )
-            return if (a.radius > b.radius) 1
+            return if ((a is Circle) && (b is Circle)) {
+                if (a.radius < b.radius) 1
+                else if (a.radius == b.radius) 0
+                else -1
+            }
             else 0
         }
     }
 
     object AscendingRadiusComparator : ShapeComparators() {
         override fun compare(a: Shape, b: Shape): Int {
-            if ((a !is Circle) || (b !is Circle)) throw IllegalArgumentException(
-                "This comparator is only for circles," +
-                        "yet a non-circle received"
-            )
-            return if (a.radius < b.radius) 1
+            return if ((a is Circle) && (b is Circle)) {
+                if (a.radius > b.radius) 1
+                else if (a.radius == b.radius) 0
+                else -1
+            }
             else 0
         }
     }
